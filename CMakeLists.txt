@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(MPPI-Generic VERSION 0.9.0 LANGUAGES C CXX CUDA)
 
 # https://cmake.org/cmake/help/latest/policy/CMP0104.html
-if (POLICY CMP0104)
+if (CMAKE_VERSION VERSION_LESS 3.24 AND POLICY CMP0104)
     cmake_policy(SET CMP0104 OLD)
 endif()
 
