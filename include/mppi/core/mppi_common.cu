@@ -4,14 +4,21 @@
 #include <mppi/utils/math_utils.h>
 #include <mppi/utils/cuda_math_utils.cuh>
 
-// CUDA barriers were first implemented in Cuda 11
+// CUDA barriers were first implemented in CUDA 11
 #if defined(CMAKE_USE_CUDA_BARRIERS) && defined(CUDART_VERSION) && CUDART_VERSION > 11000
 #include <cuda/barrier>
 using barrier = cuda::barrier<cuda::thread_scope_block>;
 
+// Turn on/off various CUDA barriers from CMake configuration
+#ifdef CMAKE_USE_CUDA_BARRIERS_DYN
 #define USE_CUDA_BARRIERS_DYN
-// #define USE_CUDA_BARRIERS_COST
+#endif
+#ifdef CMAKE_USE_CUDA_BARRIERS_COST
+#define USE_CUDA_BARRIERS_COST
+#endif
+#ifdef CMAKE_USE_CUDA_BARRIERS_ROLLOUT
 #define USE_CUDA_BARRIERS_ROLLOUT
+#endif
 #endif
 
 #include <cooperative_groups.h>

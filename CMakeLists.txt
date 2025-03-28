@@ -12,6 +12,9 @@ endif()
 option(BUILD_TESTS "BUILD_TESTS" OFF)
 option(BUILD_EXAMPLES "BUILD_EXAMPLES" OFF)
 option(MPPI_USE_CUDA_BARRIERS "Compile MPPI-Generic with cuda barrier support. Turn off for GPUs older than the 20 series." ON)
+option(MPPI_USE_CUDA_BARRIERS_COST "Compile MPPI-Generic with cuda barriers for cost-only kernels when general barrier support is enabled." OFF)
+option(MPPI_USE_CUDA_BARRIERS_DYN "Compile MPPI-Generic with cuda barriers for dynamics-only kernels when general barrier support is enabled." ON)
+option(MPPI_USE_CUDA_BARRIERS_ROLLOUT "Compile MPPI-Generic with cuda barriers for combined kernels when general barrier support is enabled." ON)
 option(MPPI_EXPORT_PACKAGE "Export this folder as the MPPI installation to the global CMake package repository" OFF)
 set(MPPI_CUDA_ARCH_LIST "" CACHE STRING "Specific CUDA Architectures to build for. Leave empty for automatic selection.")
 
@@ -76,6 +79,18 @@ endif()
 if (MPPI_USE_CUDA_BARRIERS)
   target_compile_definitions(${MPPI_HEADER_LIBRARY_NAME} INTERFACE
     CMAKE_USE_CUDA_BARRIERS)
+  if (MPPI_USE_CUDA_BARRIERS_DYN)
+    target_compile_definitions(${MPPI_HEADER_LIBRARY_NAME} INTERFACE
+      CMAKE_USE_CUDA_BARRIERS_DYN)
+  endif()
+  if (MPPI_USE_CUDA_BARRIERS_ROLLOUT)
+    target_compile_definitions(${MPPI_HEADER_LIBRARY_NAME} INTERFACE
+      CMAKE_USE_CUDA_BARRIERS_ROLLOUT)
+  endif()
+  if (MPPI_USE_CUDA_BARRIERS_COST)
+    target_compile_definitions(${MPPI_HEADER_LIBRARY_NAME} INTERFACE
+      CMAKE_USE_CUDA_BARRIERS_COST)
+  endif()
 endif()
 
 if (BUILD_TESTS OR BUILD_EXAMPLES)
