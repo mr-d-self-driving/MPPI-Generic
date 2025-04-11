@@ -11,6 +11,7 @@ endif()
 ####################################
 option(MPPI_BUILD_TESTS "Build unit tests." OFF)
 option(MPPI_BUILD_EXAMPLES "Build example code." OFF)
+option(MPPI_CCACHE_DISABLE "Disable using ccache (when available) to potentially speed up repeated builds" OFF)
 option(MPPI_USE_CUDA_BARRIERS "Compile MPPI-Generic with cuda barrier support. Turn off for GPUs older than the 20 series." ON)
 option(MPPI_USE_CUDA_BARRIERS_COST "Compile MPPI-Generic with cuda barriers for cost-only kernels when general barrier support is enabled." OFF)
 option(MPPI_USE_CUDA_BARRIERS_DYN "Compile MPPI-Generic with cuda barriers for dynamics-only kernels when general barrier support is enabled." ON)

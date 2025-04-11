@@ -13,6 +13,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Look for ccache to potentially speed up repeated compilations
+find_program(CCACHE_PROGRAM ccache)
+if (CCACHE_PROGRAM AND NOT MPPI_CCACHE_DISABLE)
+  message(STATUS "Using ccache to speed up repeated builds")
+  set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+  set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+  set(CMAKE_CUDA_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+elseif(NOT CCACHE_PROGRAM AND NOT MPPI_CCACHE_DISABLE)
+  message(STATUS "ccache not found. Using ccache can speed up repeated builds.")
+endif()
+
 # Add debug flags so cuda-gdb can be used to stop inside a kernel.
 # NOTE: You may have to run make multiple times for it to compile successfully.
 set(CMAKE_CUDA_FLAGS_DEBUG "${CMAKE_CUDA_FLAGS_DEBUG} -G --keep")
