@@ -15,6 +15,7 @@ Header file for dynamics
 #include <stdio.h>
 #include <math.h>
 
+#include <array>
 #include <cfloat>
 #include <type_traits>
 #include <vector>
