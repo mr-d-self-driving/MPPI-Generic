@@ -15,12 +15,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Look for ccache to potentially speed up repeated compilations
 find_program(CCACHE_PROGRAM ccache)
-if (CCACHE_PROGRAM AND NOT MPPI_CCACHE_DISABLE)
+if (CCACHE_PROGRAM AND NOT MPPI_USE_CCACHE)
   message(STATUS "Using ccache to speed up repeated builds")
   set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
   set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
   set(CMAKE_CUDA_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
-elseif(NOT CCACHE_PROGRAM AND NOT MPPI_CCACHE_DISABLE)
+elseif(NOT CCACHE_PROGRAM AND NOT MPPI_USE_CCACHE)
   message(STATUS "ccache not found. Using ccache can speed up repeated builds.")
 endif()
 

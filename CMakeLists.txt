@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 3.8)
+if (CMAKE_VERSION VERSION_LESS 3.12)
+  cmake_minimum_required(VERSION 3.8)
+else()
+  cmake_minimum_required(VERSION 3.8...3.24)
+endif()
 project(MPPI-Generic VERSION 0.9.0 LANGUAGES C CXX CUDA)
 
 # https://cmake.org/cmake/help/latest/policy/CMP0104.html
@@ -11,7 +15,7 @@ endif()
 ####################################
 option(MPPI_BUILD_TESTS "Build unit tests." OFF)
 option(MPPI_BUILD_EXAMPLES "Build example code." OFF)
-option(MPPI_CCACHE_DISABLE "Disable using ccache (when available) to potentially speed up repeated builds" OFF)
+option(MPPI_USE_CCACHE "Use ccache (when available) to potentially speed up repeated builds" ON)
 option(MPPI_USE_CUDA_BARRIERS "Compile MPPI-Generic with cuda barrier support. Turn off for GPUs older than the 20 series." ON)
 option(MPPI_USE_CUDA_BARRIERS_COST "Compile MPPI-Generic with cuda barriers for cost-only kernels when general barrier support is enabled." OFF)
 option(MPPI_USE_CUDA_BARRIERS_DYN "Compile MPPI-Generic with cuda barriers for dynamics-only kernels when general barrier support is enabled." ON)
