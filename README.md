@@ -2,10 +2,10 @@
 MPPI-Generic is a C++/CUDA header-only library implementation of Model Predictive Path Integral Control (MPPI) by [Williams et al.](https://ieeexplore.ieee.org/document/8558663)
 
 ## Citation
-If you use this library for research purposes, please cite the following paper:
+If you use this library for research purposes, please cite the following [paper](https://arxiv.org/abs/2409.07563):
 ```
-@misc{vlahov2024mppigenericcudalibrarystochastic,
-      title={MPPI-Generic: A CUDA Library for Stochastic Optimization},
+@misc{vlahov2024mppi,
+      title={MPPI-Generic: A CUDA Library for Stochastic Trajectory Optimization},
       author={Bogdan Vlahov and Jason Gibson and Manan Gandhi and Evangelos A. Theodorou},
       year={2024},
       eprint={2409.07563},
@@ -44,19 +44,19 @@ Note: If using Pop!\_OS you can `sudo apt install system76-cuda` instead of inst
 ## Download the repo
 ```bash
 cd /path/to/repos
-git clone https://github.gatech.edu/ACDS/MPPI-Generic.git
+git clone https://github.com/ACDSLab/MPPI-Generic.git
 cd MPPI-Generic
 git submodule update --init --recursive
 ```
 ## Building MPPI-Generic with tests
 
 The default is to build the library with tests OFF.
-If you would like to turn on the tests when building, pass the flag `-DBUILD_TESTS=ON` when configuring cmake.
+If you would like to turn on the tests when building, pass the flag `-DMPPI_BUILD_TESTS=ON` when configuring cmake.
 
 ```bash
 mkdir build
 cd build
-cmake -DBUILD_TESTS=ON ..
+cmake -DMPPI_BUILD_TESTS=ON ..
 make
 make test
 ```
