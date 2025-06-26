@@ -1,17 +1,25 @@
-cmake_minimum_required(VERSION 3.8)
-project(MPPI-Generic VERSION 0.9.0 LANGUAGES C CXX CUDA)
+if (CMAKE_VERSION VERSION_LESS 3.12)
+  cmake_minimum_required(VERSION 3.8)
+else()
+  cmake_minimum_required(VERSION 3.8...3.24)
+endif()
 
 # https://cmake.org/cmake/help/latest/policy/CMP0104.html
-if (POLICY CMP0104)
+if (CMAKE_VERSION VERSION_LESS 3.24 AND POLICY CMP0104)
     cmake_policy(SET CMP0104 OLD)
 endif()
+project(MPPI-Generic VERSION 0.9.0 LANGUAGES C CXX CUDA)
 
 ####################################
 # Set up options for configuration #
 ####################################
-option(BUILD_TESTS "BUILD_TESTS" OFF)
-option(BUILD_EXAMPLES "BUILD_EXAMPLES" OFF)
+option(MPPI_BUILD_TESTS "Build unit tests." OFF)
+option(MPPI_BUILD_EXAMPLES "Build example code." OFF)
+option(MPPI_USE_CCACHE "Use ccache (when available) to potentially speed up repeated builds" ON)
 option(MPPI_USE_CUDA_BARRIERS "Compile MPPI-Generic with cuda barrier support. Turn off for GPUs older than the 20 series." ON)
+option(MPPI_USE_CUDA_BARRIERS_COST "Compile MPPI-Generic with cuda barriers for cost-only kernels when general barrier support is enabled." OFF)
+option(MPPI_USE_CUDA_BARRIERS_DYN "Compile MPPI-Generic with cuda barriers for dynamics-only kernels when general barrier support is enabled." ON)
+option(MPPI_USE_CUDA_BARRIERS_ROLLOUT "Compile MPPI-Generic with cuda barriers for combined kernels when general barrier support is enabled." ON)
 option(MPPI_EXPORT_PACKAGE "Export this folder as the MPPI installation to the global CMake package repository" OFF)
 set(MPPI_CUDA_ARCH_LIST "" CACHE STRING "Specific CUDA Architectures to build for. Leave empty for automatic selection.")
 
@@ -76,9 +84,21 @@ endif()
 if (MPPI_USE_CUDA_BARRIERS)
   target_compile_definitions(${MPPI_HEADER_LIBRARY_NAME} INTERFACE
     CMAKE_USE_CUDA_BARRIERS)
+  if (MPPI_USE_CUDA_BARRIERS_DYN)
+    target_compile_definitions(${MPPI_HEADER_LIBRARY_NAME} INTERFACE
+      CMAKE_USE_CUDA_BARRIERS_DYN)
+  endif()
+  if (MPPI_USE_CUDA_BARRIERS_ROLLOUT)
+    target_compile_definitions(${MPPI_HEADER_LIBRARY_NAME} INTERFACE
+      CMAKE_USE_CUDA_BARRIERS_ROLLOUT)
+  endif()
+  if (MPPI_USE_CUDA_BARRIERS_COST)
+    target_compile_definitions(${MPPI_HEADER_LIBRARY_NAME} INTERFACE
+      CMAKE_USE_CUDA_BARRIERS_COST)
+  endif()
 endif()
 
-if (BUILD_TESTS OR BUILD_EXAMPLES)
+if (MPPI_BUILD_TESTS OR MPPI_BUILD_EXAMPLES)
     # find yaml-cpp
     find_package(yaml-cpp REQUIRED)
     include_directories(${YAML_CPP_INCLUDE_DIR})
@@ -169,10 +189,10 @@ install(FILES
   DESTINATION ${CMAKE_CONFIG_DEST}
 )
 
-if (BUILD_TESTS OR BUILD_EXAMPLES)
+if (MPPI_BUILD_TESTS OR MPPI_BUILD_EXAMPLES)
     add_subdirectory(src)
 endif()
-if (BUILD_EXAMPLES)
+if (MPPI_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
@@ -183,7 +203,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/
 ###################################################################
 # Add gtest
 ###################################################################
-if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND BUILD_TESTS)
+if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND MPPI_BUILD_TESTS)
   message(STATUS "Building MPPI Generic tests")
   enable_testing()
   ############################################################
