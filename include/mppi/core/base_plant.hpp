@@ -10,6 +10,7 @@
 
 // Double check if these are included in mppi_common.h
 #include <Eigen/Dense>
+#include <unistd.h>
 #include <vector>
 #include <array>
 #include <chrono>
