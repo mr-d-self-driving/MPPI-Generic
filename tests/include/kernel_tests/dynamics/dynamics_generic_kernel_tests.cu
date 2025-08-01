@@ -374,6 +374,12 @@ void launchStepTestKernel(DYNAMICS_T& dynamics, std::vector<std::array<float, DY
     std::cerr << "Num States doesn't match num next_states" << std::endl;
     return;
   }
+  if (state.size() % dim_x != 0)
+  {
+    std::cerr << "Num States needs be evenly divisible by dim_x: " << state.size()
+              << " state queries, " << dim_x << " parallelizable threads per block" << std::endl;
+    return;
+  }
   int count = state.size();
   float* state_d;
   float* control_d;
@@ -433,7 +439,7 @@ void checkGPUComputationStep(DYN_T& dynamics, float dt, int max_y_dim, int x_dim
   dynamics.GPUSetup();
   CudaCheckError();
 
-  const int num_points = 1000;
+  const int num_points = 1024;
   Eigen::Matrix<float, DYN_T::CONTROL_DIM, num_points> control_trajectory;
   control_trajectory = Eigen::Matrix<float, DYN_T::CONTROL_DIM, num_points>::Random();
   Eigen::Matrix<float, DYN_T::STATE_DIM, num_points> state_trajectory;
